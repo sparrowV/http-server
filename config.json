@@ -1,0 +1,17 @@
+{
+  "log": "logs",
+  "server": [
+    {
+      "vhost": "example1.ge",
+      "ip": "127.0.0.1",
+      "port": 8888,
+      "documentroot": "example1"
+    },
+    {
+      "vhost": "example2.ge",
+      "ip": "127.0.0.1",
+      "port": 8888,
+      "documentroot": "example2"
+    }
+  ]
+}
