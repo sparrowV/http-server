@@ -1,30 +1,15 @@
-import json
-import requests
-import numpy as np
+from numpy import mean
+from basicHttp import basicHttp
 
-class virtualhost():
+class virtualhost(basicHttp):
     """
         Virtual hosting testing class
     """
     def __init__(self, config):
-        with open(config, 'r') as f:
-            self.config = json.load(f)
-            # print (self.config)
+        super().__init__(config)
 
     def run(self):
-        tests = [self.test1]
-        return np.mean([t() for t in tests])
-
-    def test1(self):
+        r = []
         for vh in self.config['server']:
-            domain = vh['vhost']
-            ip = vh['ip']
-            port = vh['port']
-            print(domain, ip, port)
-            print("http://" + domain + ':' + str(port))
-            response = requests.get("http://" + domain + ':' + str(port))
-            print(response.headers)
-            print(response.text)
-        return 0
-
-    
+            r.append(super().run(vh))
+        return mean(r)
