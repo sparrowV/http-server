@@ -24,6 +24,6 @@ class testsbase():
                 score.append(result)
                 print(result)
             except Exception as err:
-                print("test crached: {}".format(err))
+                print("test crashed: {}".format(err))
 
         return mean(score)
