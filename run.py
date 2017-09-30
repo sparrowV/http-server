@@ -3,11 +3,11 @@ import subprocess
 import time
 import signal
 import os
-import basicHttp as bh
-import virtualhost as vh
-import keepalive as ka
-import rangeheader as rh
-import parallelhttp as ph
+from basicHttp import basicHttp
+from virtualhost import virtualhost 
+from keepalive import keepalive
+from rangeheader import rangeheader
+from parallelhttp import parallelhttp
 
 def main():
     parser = argparse.ArgumentParser(description='HTTP tests')
@@ -24,8 +24,8 @@ def main():
     time.sleep(1)
 
     total_score = 0
-    tests = [(bh.basicHttp, 30), (vh.virtualhost, 20), (ph.parallelhttp, 20), 
-            (ka.keepalive, 15), (rh.rangeheader, 15)]
+    tests = [(basicHttp, 30), (virtualhost, 20), (parallelhttp, 20), 
+            (keepalive, 15), (rangeheader, 15)]
     for test, scaler in tests:
         t = test(args.config_file)
         result = t.run() * scaler

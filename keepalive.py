@@ -1,6 +1,26 @@
-class keepalive():
+import requests
+from testsbase import testsbase
+
+class keepalive(testsbase):
     def __init__(self, config):
-        pass
+        super().__init__(config)
 
     def run(self, vh=None):
-        return 1
+        test_list = [self.test1, self.test2, self.test3]
+        return super().run(tests=test_list, vh=vh, testfile='index.html')
+
+    def test1(self):
+        response = requests.get(self.url, headers={'Connection': 'keep-alive'})    
+        return ('connection' in response.headers and 'keep-alive' in response.headers['connection'])
+
+    def test2(self):
+        response = requests.get(self.url, headers={'Connection': 'keep-alive'}) 
+        return ('keep-alive' in response.headers)
+
+    def test3(self):
+        s = requests.Session()
+        r1 = s.get(self.url)
+        r2 = s.get(self.url+'_2')
+        return ('keep-alive' in r2.headers and r1.status_code == 200 
+                and r2.status_code == 200)
+
