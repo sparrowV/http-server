@@ -1,0 +1,26 @@
+{
+  "log": "logs",
+  "server": [
+    {
+      "vhost": "example1.ge",
+      "ip": "127.0.0.1",
+      "port": 8888,
+      "documentroot": "example1"
+    },
+    {
+      "vhost": "example2.ge",
+      "ip": "127.0.0.1",
+      "port": 8888,
+      "documentroot": "example2"
+    },
+    {
+      "vhost": "example3.ge",
+      "ip": "0.0.0.0",
+      "port": 8080,
+      "balance": [
+        "www.example1.ge:8888",
+        "www.example2.ge:8888"
+      ]
+    }
+  ]
+}
