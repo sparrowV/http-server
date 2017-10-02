@@ -14,17 +14,29 @@ class rangeheader(testsbase):
         return super().run(tests=test_list, vh=None, testfile='random.file')
 
     def test1(self):
+        """
+        check ACCEPT-RANGES header
+        """
         response = requests.head(self.url)
         return 'ACCEPT-RANGES' in response.headers
 
     def test2(self):
+        """
+        check ACCEPT-RANGES header's value
+        """
         response = requests.head(self.url)
         return response.headers['ACCEPT-RANGES'].lower() == 'bytes'
 
     def test3(self):
+        """
+        check range 1000-1999
+        """
         return self.check_range(offset=1000, length=1000)
 
     def test4(self):
+        """
+        check range 0-
+        """
         return self.check_range(offset=1000, length=0)
 
     def check_range(self, offset=0, length=0):

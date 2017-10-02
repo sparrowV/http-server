@@ -13,13 +13,16 @@ class testsbase():
         if vh is None:
             vh = self.config['server'][0]
 
-        self.domain, self.ip, self.port, _ = vh.values()
+        self.domain = vh['vhost']
+        self.ip = vh['ip']
+        self.port = vh['port']
+        self.docroot = vh['documentroot']
         self.url = "http://" + self.domain + ':' + str(self.port) + '/' + testfile
 
         score = []
         for t in tests:
             try:
-                print("Running {} {}: ".format(type(self).__name__, t.__name__), end='')
+                print("Running {} {}: ".format(type(self).__name__, t.__name__, t.__doc__), end='')
                 result = t()
                 score.append(result)
                 print(result)

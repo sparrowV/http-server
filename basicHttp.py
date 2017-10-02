@@ -12,7 +12,7 @@ class basicHttp(testsbase):
 
     def test1(self):
         """
-        Tests for unknown domain.
+        check for unknown domain
         """
         headers = {'host': 'google.com'}
         response = requests.get(self.url, headers=headers)
@@ -21,14 +21,14 @@ class basicHttp(testsbase):
 
     def test2(self):
         """
-        Tests for static files
+        static file download
         """
         response = requests.get(self.url)
         return ((response.status_code == 200) and (self.domain in response.text))
 
     def test3(self):
         """
-        Tests supported headers
+        supported headers
         """
         response = requests.get(self.url)    
         return all (h in response.headers for h in ['server', 'date', 'content-length', 
@@ -36,7 +36,7 @@ class basicHttp(testsbase):
 
     def test4(self):
         """
-        Tests content-length
+        content-length
         """
         content_length = int(requests.head(self.url).headers['content-length'])
         response = requests.get(self.url)
@@ -44,7 +44,7 @@ class basicHttp(testsbase):
 
     def test5(self):
         """
-        Tests HEAD method support
+        HEAD method support
         """
         response = requests.head(self.url)
         return all (h in response.headers for h in ['server', 'date', 'content-length', 
@@ -52,7 +52,7 @@ class basicHttp(testsbase):
 
     def test6(self):
         """
-        Test for etag 
+        etag support
         """
         response = requests.get(self.url)
         etag = response.headers['etag']

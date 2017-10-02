@@ -10,7 +10,7 @@ class parallelhttp(testsbase):
         self.q = Queue()
 
     def run(self, vh=None):
-        test_list = [self.test1, self.test2, self.test2]
+        test_list = [self.test1, self.test2]
         return super().run(tests=test_list, vh=vh, testfile='index.html')
 
     def worker(self):
