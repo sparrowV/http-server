@@ -36,7 +36,7 @@ class basicHttp(testsbase):
         """ content-length """
         content_length = int(self.head.headers['content-length'])
         response = self.get
-        return response.status_code == 200 and content_length == len(response.text)
+        return response.status_code == 200 and content_length == len(response.content)
 
     def test5(self):
         """ HEAD method """
