@@ -26,13 +26,22 @@ def main():
 
     total_score = 0
     tests = [(basicHttp, 30), (virtualhost, 20), (parallelhttp, 20), 
-            (keepalive, 15), (rangeheader, 15), (logTest, 1000)]
+            (keepalive, 15), (rangeheader, 15)]
     for test, scaler in tests:
         t = test(args.config_file)
         result = t.run() * scaler
         total_score += result
 
+
+    print("---------------------\nTest for bonus")
+    t = logTest(args.config_file)
+    bonus = (t.run() == 1)
+
     print("---------------------\nTotal score is: {}".format(total_score))
+    if bonus:
+        print("You got bonus +5% on midterm!") 
+    else:
+        print("No bonus, try harder!") 
 
     # stop service 
     os.kill(proc.pid, signal.SIGUSR1)

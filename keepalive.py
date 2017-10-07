@@ -10,12 +10,12 @@ class keepalive(testsbase):
         return super().run(tests=test_list, vh=vh, testfile='index.html')
 
     def test1(self):
-        """ check keep-alive header"""
+        """ check keep-alive header """
         response = requests.get(self.url, headers={'Connection': 'keep-alive'})    
         return ('connection' in response.headers and 'keep-alive' in response.headers['connection'])
 
     def test2(self):
-        """ """
+        """ check keep-alive header 2 """
         response = requests.get(self.url, headers={'Connection': 'keep-alive'}) 
         return ('keep-alive' in response.headers)
 

@@ -30,7 +30,7 @@ class testsbase():
         score = []
         for t in tests:
             try:
-                print("Running {0:12} {1:5} {2:40}: ".format(type(self).__name__, t.__name__, t.__doc__), end='')
+                print("{0:12} {1:5} {2:40}: ".format(type(self).__name__, t.__name__, t.__doc__), end='')
                 result = t()
                 score.append(result)
                 print(result)
