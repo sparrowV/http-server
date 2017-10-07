@@ -16,7 +16,7 @@ class parallelhttp(testsbase):
     def worker(self):
         try:
             response = requests.get(self.url)
-            self.q.put((response.status_code == 200) and (self.domain in response.text))
+            self.q.put((response.status_code == 200) and (self.check_byhash(response)))
         except Exception as err:
             print(err)
 
@@ -34,11 +34,13 @@ class parallelhttp(testsbase):
         return all(results) and (len(results) == number_of_treads)
     
     def test1(self):
+        """ 100 connections"""
         start = time()
         r = self.parallel_clients(100)
         return r and (time() - start < 1)
 
     def test2(self):
+        """ 500 connections """
         start = time()
         r = self.parallel_clients(500)
         return r and (time() - start < 10)

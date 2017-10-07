@@ -1,60 +1,58 @@
-import requests
 from testsbase import testsbase
+import magic
+import os
+from numpy import mean
 
 class basicHttp(testsbase):
     def __init__(self, config):
         super().__init__(config)
 
     def run(self, vh=None):
-        test_list = [self.test1, self.test2, self.test3, 
-                    self.test4, self.test5]
-        return super().run(tests=test_list, vh=vh, testfile='index.html')
+        test_list = [self.test2, self.test3, self.test4, self.test5, self.test7]
+    
+        docroot = self.config['server'][0]['documentroot']
+        results = []
+        for root, dirs, files in os.walk(docroot, topdown=False):
+            for name in files:
+                testfile = os.path.join(root, name)[len(docroot)+1:]
+                print("test file: {}".format(testfile))
+                results.append(super().run(tests=test_list, vh=vh, testfile=testfile))
 
-    def test1(self):
-        """
-        check for unknown domain
-        """
-        headers = {'host': 'google.com'}
-        response = requests.get(self.url, headers=headers)
-        return ((response.status_code == 404)
-                 and ('REQUESTED DOMAIN NOT FOUND' in response.text.upper()))
+        return mean(results)
 
     def test2(self):
-        """
-        static file download
-        """
-        response = requests.get(self.url)
-        return ((response.status_code == 200) and (self.domain in response.text))
+        """ GET file, check sha254 """
+        response = self.get
+        return self.check_byhash(response)
 
     def test3(self):
-        """
-        supported headers
-        """
-        response = requests.get(self.url)    
-        return all (h in response.headers for h in ['server', 'date', 'content-length', 
-                                                    'content-type', 'etag'])
+        """ GET supported headers """
+        response = self.get 
+        headers = [h in response.headers for h in ['server', 
+                    'date', 'content-length', 'content-type', 'etag']]   
+        return all (headers)
 
     def test4(self):
-        """
-        content-length
-        """
-        content_length = int(requests.head(self.url).headers['content-length'])
-        response = requests.get(self.url)
-        return content_length == len(response.text)
+        """ content-length """
+        content_length = int(self.head.headers['content-length'])
+        response = self.get
+        return response.status_code == 200 and content_length == len(response.text)
 
     def test5(self):
-        """
-        HEAD method support
-        """
-        response = requests.head(self.url)
-        return all (h in response.headers for h in ['server', 'date', 'content-length', 
-                                                    'content-type', 'etag'])
+        """ HEAD method """
+        response = self.head        
+        headers = [h in response.headers for h in ['server', 
+                    'date', 'content-length', 'content-type', 'etag']]
+        return len(response.text) == 0 and all(headers)
 
-    def test6(self):
-        """
-        etag support
-        """
-        response = requests.get(self.url)
-        etag = response.headers['etag']
-        response = requests.get(self.url, headers={'If-None-Match': etag})
-        return response.status_code == 304
+    # def test6(self):
+    #     """ etag support """
+    #     response = self.get
+    #     etag = response.headers['etag']
+    #     response = requests.get(self.url, headers={'If-None-Match': etag})
+    #     return response.status_code == 304
+
+    def test7(self):
+        """ check mime-type """
+        response = self.get
+        return magic.from_buffer(response.content, mime=True) == response.headers['content-type']

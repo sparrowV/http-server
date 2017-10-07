@@ -8,6 +8,7 @@ from virtualhost import virtualhost
 from keepalive import keepalive
 from rangeheader import rangeheader
 from parallelhttp import parallelhttp
+from logTest import logTest
 
 def main():
     parser = argparse.ArgumentParser(description='HTTP tests')
@@ -25,7 +26,7 @@ def main():
 
     total_score = 0
     tests = [(basicHttp, 30), (virtualhost, 20), (parallelhttp, 20), 
-            (keepalive, 15), (rangeheader, 15)]
+            (keepalive, 15), (rangeheader, 15), (logTest, 1000)]
     for test, scaler in tests:
         t = test(args.config_file)
         result = t.run() * scaler
