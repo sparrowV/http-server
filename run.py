@@ -32,11 +32,10 @@ def main():
         result = t.run() * scaler
         total_score += result
 
-
     print("---------------------\nTest for bonus")
     t = logTest(args.config_file)
     bonus = (t.run() == 1)
-
+    
     print("---------------------\nTotal score is: {}".format(total_score))
     if bonus:
         print("You got bonus +5% on midterm!") 

@@ -46,6 +46,7 @@ class logTest(testsbase):
             time.strptime(l[l.find('[') + 1:l.find(']')], "%a %b %d %H:%M:%S %Y")
             l = l[l.find(']') + 2:]
             ip, domain, path, code, size, _ = l.split()
+            domain = domain.split(':')[0]
             return ip == self.ip and domain == d \
                    and path == '/index.html' and code == str(r.status_code) \
                    and size == r.headers['content-length']
