@@ -30,7 +30,7 @@ class Server(threading.Thread):
 
             while True:
                 conn, addr = sock.accept()
-                #print("New connection: {}".format(addr))
+
                 Worker(conn, buffer_size).start()
 
 
@@ -48,11 +48,11 @@ def parse_config_file(file_name):
          Server(elem["ip"],elem["port"]).start()
          #print("server " + str(elem["port"]) + " started")
          servers_started.append([elem["ip"],elem['port']])
-    #print("doc root\n\n",docroots)
 
 
 
-    #print(data)
+
+
 
 parse_config_file(sys.argv[1])
 
@@ -63,7 +63,7 @@ parse_config_file(sys.argv[1])
 class Worker(threading.Thread):
 
     def __init__(self, sock, buffer_size):
-        #print("starint bor\n\n")
+
         super().__init__()
 
         self.sock = sock
@@ -78,38 +78,10 @@ class Worker(threading.Thread):
 
 
     def parse_header(self,header):
-       # #print("start\n")
+
 
        tokens = header.split("\r\n")
-       """
-       # #print("tokens",tokens)
-        self.method = tokens[0].split(" ")[0].strip()
-        ##print(self.method)
 
-
-        self.file_name = tokens[0].split(" ")[1].replace("%5C","/").replace("%20"," ").strip()
-        ##print(self.file_name)
-        self.v_host = tokens[1].split(":")[1].strip()
-        ##print(self.v_host)
-
-
-
-        if("keep-alive" in tokens[5] or "keep-alive" in tokens[4]):
-
-            self.keep_alive = True
-       # #print(self.keep_alive)
-
-        try:
-            #print("vhost is \n",self.v_host)
-            #print("here path is \n "+docroots[self.v_host])
-            with open(docroots[self.v_host]+"/" + self.file_name, 'rb') as file:
-
-                self.file = file.read()
-        except:
-            pass
-            #print("eroor reading file")
-
-        """
        self.method = tokens[0].split(" ")[0].strip()
        self.file_name = tokens[0].split(" ")[1].replace("%5C", "/").replace("%20", " ").strip()
 
@@ -119,15 +91,14 @@ class Worker(threading.Thread):
            elif("connection" in elem.lower() and "keep-alive" in elem.lower()):
                self.keep_alive = True
            elif("range" in elem.lower()):
-               print("yes\n\n")
+
                self.range = elem.split("=")[1].strip()
 
        try:
-           # print("vhost is \n",self.v_host)
-           # print("here path is \n "+docroots[self.v_host])
+
            with open(docroots[self.v_host] + "/" + self.file_name, 'rb') as file:
                if (self.range != ""):
-                   print("range ",self.range)
+
                    offset = int(self.range.split("-")[0])
                    file.seek(offset)
                    if(self.range.split("-")[1] == ""):
@@ -142,7 +113,7 @@ class Worker(threading.Thread):
 
        except:
            pass
-           # print("eroor reading file")
+
 
     def make_responce_header(self):
 
@@ -150,7 +121,7 @@ class Worker(threading.Thread):
         domain_not_found = "<html><body><p>REQUESTED DOMAIN NOT FOUND</p></body></html>"
         if(len(self.file) !=0):
             self.status_code = 200
-            #print("status code in responce",self.status_code)
+
             response+="200 OK"
         else:
             self.status_code = 404
@@ -168,18 +139,17 @@ class Worker(threading.Thread):
             response += "Content-Length: " + str(len(domain_not_found)) + "\r\n"
 
 
-        #print("file_name",self.file_name)
-        #print(self.file_name.split("."))
+
 
 
         response+="Accept-Ranges: bytes" +"\r\n"
         if(self.file !=""):
             mime = magic.Magic(mime=True)
             type = mime.from_file(self.v_host+"/"+self.file_name)
-            #print("type",type)
+
             response += "Content-Type: "+type+"\r\n"
         else:
-            #print("of couse\n\n\n\n\n")
+
             response += "Content-Type: plain/html" + "\r\n"
 
         if(self.keep_alive):
@@ -203,16 +173,8 @@ class Worker(threading.Thread):
 
 
     def run(self):
-        #print("zd\n\n")
-        peer_name = self.sock.getpeername()
-
-
 
         while True:
-           # self.sock.settimeout(10)
-            #print("in while")
-
-
             try:
                 payload = self.sock.recv(self.buffer_size)
             except:
@@ -223,7 +185,7 @@ class Worker(threading.Thread):
 
 
 
-            #print("sd")
+
             payload_str = str(payload, "utf-8").strip()
             #print("res --------",payload_str)
 
@@ -232,11 +194,11 @@ class Worker(threading.Thread):
             #responce["content"] = self.file
 
             if payload:
-                #print("in here")
+
                 #print("{}:{} > {}".format(peer_name[0], peer_name[1], payload_str))
 
                 if payload_str == "OVER":
-                    #print("over\n\n\n?")
+
                     #print("Client closed connection: {}".format(peer_name))
                     self.sock.close()
                     break
@@ -252,7 +214,7 @@ class Worker(threading.Thread):
                         #self.sock.send("\r\n".encode())
 
                         if(self.method == "GET"):
-                           #print("in get",self.status_code)
+
                            if(self.status_code == 200):
                                responce += "\r\n"
                                self.sock.send(responce.encode())
@@ -262,10 +224,10 @@ class Worker(threading.Thread):
 
                                responce+="\r\n"
                                self.sock.send(responce.encode())
-                               #print("here bitch")
+
 
                         else:
-                            #print("in head", self.status_code)
+
                             if (self.status_code == 200):
                                 responce += "\r\n"
                                 self.sock.send(responce.encode())
@@ -276,18 +238,18 @@ class Worker(threading.Thread):
                                 self.sock.send(responce.encode())
 
                                 self.sock.send(responce.encode())
-                                #print("here bitch")
+
 
 
 
                         if (self.keep_alive and self.sock.gettimeout() == None):
-                            #print("kept alive\n\n\n\n")
+
                             self.sock.settimeout(5)
 
             else:
                 #print("Client closed connection: {}".format(peer_name))
                 break
-        #print("out loop")
+
 
 
 

@@ -49,9 +49,6 @@ class testsbase():
             f.seek(offset, 0)
             data = f.read(length)
 
-        #print("in check",self.testfile)
-        #print("data",len(data))
-
         h.update(data)
 
         m.update(response.content)

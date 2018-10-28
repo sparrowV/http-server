@@ -38,13 +38,10 @@ class parallelhttp(testsbase):
         """ 100 connections"""
         start = time()
         r = self.parallel_clients(100)
-        print("r is ",r)
-        print("time is ",time() - start )
         return r and (time() - start < 1)
 
     def test2(self):
         """ 500 connections """
         start = time()
         r = self.parallel_clients(500)
-        print("answer is ")
         return r and (time() - start < 10)
