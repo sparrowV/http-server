@@ -23,14 +23,17 @@ class testsbase():
         self.testfile = self.docroot + '/' + testfile
 
         try:
-            self.get = requests.get(self.url) 
-            self.head = requests.head(self.url) 
+            print("Done here")
+            self.get = requests.get(self.url)
+
+            self.head = requests.head(self.url)
+
         except Exception as err:
             print("could not GET/HEAD file {} error: {}".format(self.url, err))
         score = []
         for t in tests:
             try:
-                print("{0:12} {1:5} {2:40}: ".format(type(self).__name__, t.__name__, t.__doc__), end='')
+                print("{0:12} {1:5} {2:40}: ".format(type(self).__name__, t.__name__, t.__doc__),end='')
                 result = t()
                 score.append(result)
                 print(result)
@@ -45,9 +48,12 @@ class testsbase():
         with open(self.testfile, "rb") as f:
             f.seek(offset, 0)
             data = f.read(length)
-        
+
+
         h.update(data)
+
         m.update(response.content)
 
+        print("ans",m.digest() == h.digest())
         return (m.digest() == h.digest())
 

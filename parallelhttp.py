@@ -10,6 +10,7 @@ class parallelhttp(testsbase):
         self.q = Queue()
 
     def run(self, vh=None):
+        print("testing parallel")
         test_list = [self.test1, self.test2]
         return super().run(tests=test_list, vh=vh, testfile='index.html')
 
@@ -37,10 +38,12 @@ class parallelhttp(testsbase):
         """ 100 connections"""
         start = time()
         r = self.parallel_clients(100)
+        print("answer is ")
         return r and (time() - start < 1)
 
     def test2(self):
         """ 500 connections """
         start = time()
         r = self.parallel_clients(500)
+        print("answer is ")
         return r and (time() - start < 10)
