@@ -23,9 +23,9 @@ class virtualhost(testsbase):
         """ unknown domain """
         headers = {'host': 'google.com'}
         response = requests.get(self.url, headers=headers)
-        print("resp status code",response.status_code)
-        print("resp here",response)
-        print("bla",response.text.upper())
+      #  print("resp status code",response.status_code)
+       # print("resp here",response)
+       # print("bla",response.text.upper())
         return ((response.status_code == 404)
                  and ('REQUESTED DOMAIN NOT FOUND' in response.text.upper()))
 

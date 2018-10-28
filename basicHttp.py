@@ -27,7 +27,7 @@ class basicHttp(testsbase):
     def test2(self):
         """ GET file, check sha254 """
         response = self.get
-        print("in here test2\n")
+      #  print("in here test2\n")
 
 
         return self.check_byhash(response)
@@ -37,15 +37,15 @@ class basicHttp(testsbase):
         response = self.get 
         headers = [h in response.headers for h in ['server', 
                     'date', 'content-length', 'content-type', 'etag']]
-        print("in here test3\n\n")
+      #  print("in here test3\n\n")
         return all (headers)
 
     def test4(self):
         """ content-length """
         content_length = int(self.head.headers['content-length'])
         response = self.get
-        print("con length",content_length)
-        print("con resp length",len(response.content))
+       # print("con length",content_length)
+       # print("con resp length",len(response.content))
         return response.status_code == 200 and content_length == len(response.content)
 
     def test5(self):
@@ -65,7 +65,7 @@ class basicHttp(testsbase):
     def test7(self):
         """ check mime-type """
         response = self.get
-        print("int test 7\n\n")
+        #print("int test 7\n\n")
         print(response.headers['content-type'])
-        print("ans should be ",magic.from_buffer(response.content, mime=True) )
+       # print("ans should be ",magic.from_buffer(response.content, mime=True) )
         return magic.from_buffer(response.content, mime=True) == response.headers['content-type']

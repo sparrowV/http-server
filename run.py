@@ -29,12 +29,12 @@ def main():
     tests = [(basicHttp, 30), (virtualhost, 20), (parallelhttp, 20), 
             (keepalive, 15), (rangeheader, 15)]
     for test, scaler in tests:
-        print("loop")
+        #print("loop")
         t = test(args.config_file)
 
         result = t.run() * scaler
         total_score += result
-        print("loop1")
+       # print("loop1")
 
     print("---------------------\nTest for bonus")
     t = logTest(args.config_file)

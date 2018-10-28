@@ -23,7 +23,7 @@ class testsbase():
         self.testfile = self.docroot + '/' + testfile
 
         try:
-            print("Done here")
+
             self.get = requests.get(self.url)
 
             self.head = requests.head(self.url)
@@ -54,6 +54,6 @@ class testsbase():
 
         m.update(response.content)
 
-        print("ans",m.digest() == h.digest())
+
         return (m.digest() == h.digest())
 
