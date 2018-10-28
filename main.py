@@ -119,14 +119,27 @@ class Worker(threading.Thread):
            elif("connection" in elem.lower() and "keep-alive" in elem.lower()):
                self.keep_alive = True
            elif("range" in elem.lower()):
+               print("yes\n\n")
                self.range = elem.split("=")[1].strip()
 
        try:
            # print("vhost is \n",self.v_host)
            # print("here path is \n "+docroots[self.v_host])
            with open(docroots[self.v_host] + "/" + self.file_name, 'rb') as file:
+               if (self.range != ""):
+                   print("range ",self.range)
+                   offset = int(self.range.split("-")[0])
+                   file.seek(offset)
+                   if(self.range.split("-")[1] == ""):
+                       self.file = file.read()
+                   else:
+                       length = int(self.range.split("-")[1]) - offset +1
+                       self.file = file.read(length)
+               else:
+                   self.file = file.read()
 
-               self.file = file.read()
+
+
        except:
            pass
            # print("eroor reading file")
@@ -158,6 +171,8 @@ class Worker(threading.Thread):
         #print("file_name",self.file_name)
         #print(self.file_name.split("."))
 
+
+        response+="Accept-Ranges: bytes" +"\r\n"
         if(self.file !=""):
             mime = magic.Magic(mime=True)
             type = mime.from_file(self.v_host+"/"+self.file_name)
@@ -166,6 +181,10 @@ class Worker(threading.Thread):
         else:
             #print("of couse\n\n\n\n\n")
             response += "Content-Type: plain/html" + "\r\n"
+
+        if(self.keep_alive):
+           response+="Connection: keep-alive"+"\r\n"
+           response+="Keep-Alive: timeout=5, max=1000" + "\r\n"
 
 
 
@@ -206,7 +225,7 @@ class Worker(threading.Thread):
 
             #print("sd")
             payload_str = str(payload, "utf-8").strip()
-
+            #print("res --------",payload_str)
 
 
 
@@ -261,9 +280,9 @@ class Worker(threading.Thread):
 
 
 
-                       # if (self.keep_alive and self.sock.gettimeout() == None):
+                        if (self.keep_alive and self.sock.gettimeout() == None):
                             #print("kept alive\n\n\n\n")
-                          #  self.sock.settimeout(5)
+                            self.sock.settimeout(5)
 
             else:
                 #print("Client closed connection: {}".format(peer_name))

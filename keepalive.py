@@ -11,12 +11,14 @@ class keepalive(testsbase):
 
     def test1(self):
         """ check keep-alive header """
-        response = requests.get(self.url, headers={'Connection': 'keep-alive'})    
+        response = requests.get(self.url, headers={'Connection': 'keep-alive'})
+
         return ('connection' in response.headers and 'keep-alive' in response.headers['connection'])
 
     def test2(self):
         """ check keep-alive header 2 """
-        response = requests.get(self.url, headers={'Connection': 'keep-alive'}) 
+        response = requests.get(self.url, headers={'Connection': 'keep-alive'})
+
         return ('keep-alive' in response.headers)
 
     def test3(self):

@@ -19,11 +19,14 @@ class rangeheader(testsbase):
             range_bytes = "bytes={}-".format(offset)
 
         response = requests.get(self.url, headers={"Range": range_bytes})
+        print("resp here3",response.headers)
+
         return self.check_byhash(response, offset=offset, length=length)
 
     def test1(self):
         """ check ACCEPT-RANGES header """
         response = requests.head(self.url)
+        print("res here",response.headers)
         return 'ACCEPT-RANGES' in response.headers
 
     def test2(self):
